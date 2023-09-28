@@ -40,6 +40,6 @@ jobs:
             git push origin --delete main-temp
           fi
           git checkout --orphan main-temp
-          git branch -d main
+          git branch -f -d main
           git branch -m main
           git push -f origin main
