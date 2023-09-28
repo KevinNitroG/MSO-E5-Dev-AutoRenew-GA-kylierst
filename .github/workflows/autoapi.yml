@@ -76,7 +76,8 @@ jobs:
           if [ -n "${{ secrets.MY_USERNAME }}" ]; then
             git config --global user.name ${{ secrets.MY_USERNAME }}
           else
-          git config --global user.name "GitHub Action"
+            git config --global user.name "GitHub Action"
+          fi
           git add .
           git commit -m "Update new refresh token with MSO_E5_Dev_AutoRenew" -a
       - name: Push changes
