@@ -40,7 +40,7 @@ jobs:
             git push origin --delete main-temp
           fi
           if git ls-remote --exit-code --heads origin main; then
-            git push origin --delete main
+            git push origin --delete main -f
           fi
           git checkout --orphan main-temp
           git branch -f -d main
