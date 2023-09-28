@@ -1,0 +1,45 @@
+#Automatic call to the API to keep alive, encrypted version
+name: Clean Commit
+
+on:
+  workflow_dispatch:
+
+permissions: write-all
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # runs-on: self-hosted
+    name: Clean Commit
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main
+        with:
+          persist-credentials: true # otherwise, the token used is the GITHUB_TOKEN, instead of your personal access token.
+
+      - name: Set up Git
+        run: |
+          if [ -n "${{ secrets.MY_EMAIL }}" ]; then
+            git config --global user.email ${{ secrets.MY_EMAIL }}
+          else
+            git config --global user.email "action@github.com"
+          fi
+          if [ -n "${{ secrets.MY_USERNAME }}" ]; then
+            git config --global user.name ${{ secrets.MY_USERNAME }}
+          else
+            git config --global user.name "GitHub Action"
+          fi
+
+      - name: Clean Commit
+        run: |
+          if git ls-remote --exit-code --heads origin main-temp; then
+            git push origin --delete main-temp
+          fi
+          git checkout --orphan main-temp
+          git branch -d main
+          git branch -m main
+          git push -f origin main
